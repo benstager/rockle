@@ -89,6 +89,7 @@ if st.session_state.attempts:
 
 if st.session_state.game_over:
     if st.button("Play Again"):
+        curr_date = pd.Timestamp.now().date()
         st.session_state.current_band = DATASET.iloc[rng_dict[curr_date]]
         st.session_state.attempts = []
         st.session_state.game_over = False
