@@ -5,7 +5,7 @@ import numpy as np
 import datetime
 from reset_day import rng_dict
 from album_dict import album_name_dict
-from country_dict import country_dict
+from country_dict import full_country_dict
 
 def highlight_closeness(guess_year, release_year):
     if guess_year is None:
@@ -27,7 +27,7 @@ def display_globe(guessed_location, location):
     if guessed_location is None:
         return ""
     
-    if country_dict[guessed_location] == country_dict[location]:
+    if full_country_dict[guessed_location] == full_country_dict[location]:
         return f"🌎"
     
     else:
