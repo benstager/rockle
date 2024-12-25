@@ -11,5 +11,6 @@ full_country_dict = {
     'Finland':'Europe',
     'Brazil':'South America',
     'Jamaica':'North America',
-    'Sweden':'Europe'
+    'Sweden':'Europe',
+    'New York':'North America'
 }
