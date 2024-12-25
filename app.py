@@ -58,6 +58,7 @@ st.write("🔥 : you are within 3 years of that album release year, or band form
 st.write("✅ : album was released that year, or band was formed that year")
 st.write("⬆️ : your guess is lower than that release year, or band formed year")
 st.write("⬇️ : your guess is higher than that release year, or band formed year")
+st.write("🌎 : you are in the correct continetn")
 st.write("")
 
 if st.button("Click to view one of this band's albums."):
