@@ -5,6 +5,7 @@ import numpy as np
 import datetime
 from reset_day import rng_dict
 from album_dict import album_name_dict
+from country_dict import country_dict
 
 def highlight_closeness(guess_year, release_year):
     if guess_year is None:
@@ -22,6 +23,15 @@ def highlight_closeness(guess_year, release_year):
     else:
         return arrow
 
+def display_globe(guessed_location, location):
+    if guessed_location is None:
+        return ""
+    
+    if country_dict[guessed_location] == country_dict[location]:
+        return f"🌎"
+    
+    else:
+        return ""
 
 DATASET = pd.read_csv('band_unit_test.csv')
 
@@ -90,6 +100,7 @@ if st.session_state.attempts:
             rows.append({
                 "Artist": guessed_band["name"],
                 "Location": guessed_band["location"],
+                "Location": f"{guessed_band['location']} {display_globe(guessed_band['location'], location)}",
                 "Date Band was Formed": f"{guessed_band['form_date']} {highlight_closeness(guessed_band['form_date'], start_year)}",
                 "1st Album Release Date": f"{guessed_band['release_1']} {highlight_closeness(guessed_band['release_1'], release_date_1)}",
                 "2nd Album Release Date": f"{guessed_band['release_2']} {highlight_closeness(guessed_band['release_2'], release_date_2)}",
