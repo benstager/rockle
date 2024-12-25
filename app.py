@@ -4,6 +4,24 @@ import pandas as pd
 import numpy as np
 import datetime
 from reset_day import rng_dict
+from album_dict import album_name_dict
+
+def highlight_closeness(guess_year, release_year):
+    if guess_year is None:
+        return ""
+    
+    release_year = pd.Timestamp(release_year).year
+    guess_year = pd.Timestamp(guess_year).year
+    
+    arrow = "⬆️" if release_year > guess_year else "⬇️"
+    
+    if release_year == guess_year:
+        return f"✅" 
+    elif abs(release_year - guess_year) <= 5:
+        return f"🔥 {arrow}" 
+    else:
+        return arrow
+
 
 DATASET = pd.read_csv('band_unit_test.csv')
 
@@ -23,12 +41,18 @@ release_date_2 = current_band["release_2"]
 release_date_3 = current_band["release_3"]
 release_date_4 = current_band["release_4"]
 
-st.title("Rock Riddle! (Merry Christmas Dad.)")
-st.write("Guess the rock band based on the hints provided.")
-st.write("You have a total of 7 guesses.")
-st.write("🔥 : you are within 3 years of that album release year, or band form date")
+st.title("🎸 Rock Riddle! (Merry Christmas Dad.) 🎶")
+st.write("Guess the rock band based on the form date, and album release dates provided. You have a total of 7 guesses. The 4 albums are the first studio albums they released.")
+st.write("")
+st.write("🔥 : you are within 3 years of that album release year, or band formed year")
 st.write("✅ : album was released that year, or band was formed that year")
-st.write("A game made by Ben Stager (Christmas 2024)")
+st.write("⬆️ : your guess is lower than that release year, or band formed year")
+st.write("⬇️ : your guess is higher than that release year, or band formed year")
+st.write("")
+
+if st.button("Click to view one of this band's albums."):
+    random_album = random.choice(album_name_dict[artist_name])
+    st.write(f"Hint: {random_album}")
 
 if not st.session_state.game_over:
     guess = st.selectbox(
@@ -66,11 +90,12 @@ if st.session_state.attempts:
             rows.append({
                 "Artist": guessed_band["name"],
                 "Location": guessed_band["location"],
-                "Date Formed": f"{guessed_band['form_date']} {'✅' if pd.Timestamp(guessed_band['form_date']).year == pd.Timestamp(start_year).year else '🔥' if abs(pd.Timestamp(guessed_band['form_date']).year - pd.Timestamp(start_year).year) <= 3 else ''}",
-                "Release Year 1": f"{guessed_band['release_1']} {'✅' if pd.Timestamp(guessed_band['release_1']).year == pd.Timestamp(release_date_1).year else '🔥' if abs(pd.Timestamp(guessed_band['release_1']).year - pd.Timestamp(release_date_1).year) <= 3 else ''}",
-                "Release Year 2": f"{guessed_band['release_2']} {'✅' if pd.Timestamp(guessed_band['release_2']).year == pd.Timestamp(release_date_2).year else '🔥' if abs(pd.Timestamp(guessed_band['release_2']).year - pd.Timestamp(release_date_2).year) <= 3 else ''}",
-                "Release Year 3": f"{guessed_band['release_3']} {'✅' if pd.Timestamp(guessed_band['release_3']).year == pd.Timestamp(release_date_3).year else '🔥' if abs(pd.Timestamp(guessed_band['release_3']).year - pd.Timestamp(release_date_3).year) <= 3 else ''}",
-                "Release Year 4": f"{guessed_band['release_4']} {'✅' if pd.Timestamp(guessed_band['release_4']).year == pd.Timestamp(release_date_4).year else '🔥' if abs(pd.Timestamp(guessed_band['release_4']).year - pd.Timestamp(release_date_4).year) <= 3 else ''}",
+                "Date Band was Formed": f"{guessed_band['form_date']} {highlight_closeness(guessed_band['form_date'], start_year)}",
+                "1st Album Release Date": f"{guessed_band['release_1']} {highlight_closeness(guessed_band['release_1'], release_date_1)}",
+                "2nd Album Release Date": f"{guessed_band['release_2']} {highlight_closeness(guessed_band['release_2'], release_date_2)}",
+                "3rd Album Release Date": f"{guessed_band['release_3']} {highlight_closeness(guessed_band['release_3'], release_date_3)}",
+                "4th Album Release Date": f"{guessed_band['release_4']} {highlight_closeness(guessed_band['release_4'], release_date_4)}",
+        "Correct?": "✅" if attempt["correct"] else "❌",
                 "Correct?": "✅" if attempt["correct"] else "❌"
             })
         else:
@@ -93,3 +118,6 @@ if st.session_state.game_over:
         st.session_state.current_band = DATASET.iloc[rng_dict[curr_date]]
         st.session_state.attempts = []
         st.session_state.game_over = False
+
+st.markdown("---") 
+st.markdown("Created by Ben Stager, 2024 (https://github.com/benstager)")  # R
