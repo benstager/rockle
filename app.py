@@ -18,7 +18,7 @@ def highlight_closeness(guess_year, release_year):
     
     if release_year == guess_year:
         return f"✅" 
-    elif abs(release_year - guess_year) <= 5:
+    elif abs(release_year - guess_year) <= 3:
         return f"🔥 {arrow}" 
     else:
         return arrow
