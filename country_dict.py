@@ -1,5 +1,5 @@
 full_country_dict = {
-    'Austrailia':'Austrailia',
+    'Australia':'Australia',
     'United States':'North America',
     'United Kingdom':'Europe',
     'England':'Europe',
