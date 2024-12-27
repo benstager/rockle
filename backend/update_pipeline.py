@@ -136,7 +136,7 @@ def update_backend(n_updates=5):
         bands_cleaned = [i for i in bands_cleaned if i is not None]
         cleaned_data = pd.concat([create_cleaned_artist(artist_name=artist) for artist in bands_to_update])
         update = pd.concat([data, cleaned_data])
-        update.to_csv('band_unit_test.csv')
+        update.to_csv('BANDS.csv')
 
         albums_update = {}
         for artist in current_bands:
