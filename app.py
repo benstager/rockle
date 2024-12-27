@@ -3,7 +3,7 @@ import random
 import pandas as pd
 import numpy as np
 import datetime
-from app_data import full_country_dict, rng_dict, album_name_dict
+from backend.app_data import full_country_dict, rng_dict, album_name_dict
 from rock_secrets import COOKIES_PASSWORD
 
 def highlight_closeness(guess_year, release_year):
