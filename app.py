@@ -4,6 +4,8 @@ import pandas as pd
 import numpy as np
 import datetime
 from app_data import full_country_dict, rng_dict, album_name_dict
+from streamlit_cookies_manager import EncryptedCookieManager
+from rock_secrets import COOKIES_PASSWORD
 
 def highlight_closeness(guess_year, release_year):
     if guess_year is None:
@@ -30,6 +32,9 @@ def display_globe(guessed_location, location):
     
     else:
         return ""
+    
+def has_played_today():
+    return None
 
 DATASET = pd.read_csv('backend/band_unit_test.csv')
 
@@ -130,4 +135,4 @@ if st.session_state.game_over:
         st.session_state.game_over = False
 
 st.markdown("---") 
-st.markdown("Created by Ben Stager, 2024 (https://github.com/benstager)")  # R
+st.markdown("Created by Ben Stager, 2024 (https://github.com/benstager)")
