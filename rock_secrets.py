@@ -1,0 +1,1 @@
+COOKIES_PASSWORD = 'benstager123'
