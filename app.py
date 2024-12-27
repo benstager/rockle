@@ -31,7 +31,7 @@ def display_globe(guessed_location, location):
     else:
         return ""
 
-DATASET = pd.read_csv('band_unit_test.csv')
+DATASET = pd.read_csv('backend/band_unit_test.csv')
 
 if "current_band" not in st.session_state:
     curr_date = pd.Timestamp.now().date()
