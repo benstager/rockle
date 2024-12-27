@@ -35,7 +35,7 @@ def display_globe(guessed_location, location):
 def has_played_today():
     return None
 
-DATASET = pd.read_csv('backend/band_unit_test.csv')
+DATASET = pd.read_csv('backend/BANDS.csv')
 
 if "current_band" not in st.session_state:
     curr_date = pd.Timestamp.now().date()
