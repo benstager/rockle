@@ -4,6 +4,8 @@ import musicbrainzngs as music
 import numpy as np
 from app_data import album_name_dict
 
+music.set_useragent("Rock-Riddle", "1.0", "bstager@tulane.edu")
+
 additional_bands = [
     "38 Special", "A Flock of Seagulls", "Accept", "Adrian Belew", "Aldo Nova", "Alphaville", "Ambrosia", 
     "Angel", "April Wine", "Argent", "Atomic Rooster", "Babyshambles", "Bananarama", "Barclay James Harvest", 
