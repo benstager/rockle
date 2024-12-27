@@ -1,42 +1,8 @@
-existing_bands = [
-    "AC/DC", "Aerosmith", "Alice Cooper", "Allman Brothers Band", "Bad Company", "Black Sabbath", 
-    "Blue Öyster Cult", "Boston", "Cheap Trick", "Creedence Clearwater Revival", "Deep Purple", 
-    "Def Leppard", "Derek and the Dominos", "Eagles", "Fleetwood Mac", "Foreigner", "Genesis", 
-    "Grateful Dead", "Heart", "Iron Maiden", "Jethro Tull", "Judas Priest", "Kansas", "KISS", 
-    "Led Zeppelin", "Lynyrd Skynyrd", "Motörhead", "Nazareth", "Pink Floyd", "Queen", "Rainbow", 
-    "REO Speedwagon", "Rush", "Santana", "Scorpions", "Steely Dan", "Styx", "Ted Nugent", "The Band", 
-    "The Doors", "The Police", "The Rolling Stones", "The Who", "Thin Lizzy", "Tom Petty and the Heartbreakers", 
-    "Triumph", "UFO", "Uriah Heep", "Van Halen", "Yes", "ZZ Top", "Bon Jovi", "Bruce Springsteen", 
-    "Dire Straits", "Guns N' Roses", "INXS", "Journey", "Metallica", "Nirvana", "Pearl Jam", 
-    "Poison", "R.E.M.", "Red Hot Chili Peppers", "Roxy Music", "Soundgarden", "The Cure", "The Smiths", 
-    "U2", "Whitesnake", "Winger", "Warrant", "10cc", "Argent", "Asia", "Bachman-Turner Overdrive", 
-    "Badfinger", "Big Star", "Blind Faith", "The Byrds", "Camel", "Can", "Caravan", "Cheap Trick", 
-    "Chicago", "Colosseum", "Cream", "Crosby, Stills, Nash & Young", "David Bowie", "Devo", "Doobie Brothers", 
-    "Electric Light Orchestra", "Emerson, Lake & Palmer", "Fairport Convention", "Focus", "Free", 
-    "Gentle Giant", "Hawkwind", "Humble Pie", "King Crimson", "Little Feat", "Love", "Manfred Mann's Earth Band", 
-    "MC5", "Mountain", "Mott the Hoople", "New York Dolls", "Nick Cave and the Bad Seeds", "Pavement", 
-    "Pixies", "Procol Harum", "Public Image Ltd.", "Renaissance", "Roxy Music", "Slade", "Small Faces", 
-    "Spinal Tap", "Steppenwolf", "The Animals", "The Beach Boys", "The Clash", "The Kinks", "The Monkees", 
-    "The Move", "The Troggs", "Traffic", "Velvet Underground", "Wings", "XTC", "Yes", "Zombies", "ZZ Top", 
-    "Anthrax", "Black Crowes", "Blondie", "Bush", "Counting Crows", "Dinosaur Jr.", "Faith No More", 
-    "Fugazi", "Green Day", "Hole", "Jane's Addiction", "Live", "Meat Puppets", "Nine Inch Nails", "Oasis", 
-    "Offspring", "Pixies", "Pulp", "Radiohead", "Rage Against the Machine", "Screaming Trees", 
-    "Sex Pistols", "Smashing Pumpkins", "Stone Temple Pilots", "Suicidal Tendencies", "T. Rex", 
-    "Talking Heads", "The B-52's", "The Breeders", "The Jam", "The Pretenders", "The Replacements", 
-    "The Stranglers", "The Verve", "They Might Be Giants", "Tool", "Violent Femmes", "Weezer", "Wilco", 
-    "Big Country", "Blue Cheer", "The Cars", "Clash", "Damn Yankees", "Dream Theater", "Extreme", 
-    "Fastway", "Goo Goo Dolls", "Hanoi Rocks", "Helmet", "Hootie & the Blowfish", "Hüsker Dü", 
-    "Iron Butterfly", "L.A. Guns", "Living Colour", "Love and Rockets", "Marillion", "Meat Loaf", 
-    "Midnight Oil", "Ministry", "Mr. Big", "Night Ranger", "The Outlaws", "Pat Benatar", "Peter Frampton", 
-    "Primus", "Queensrÿche", "Saga", "Savatage", "Sepultura", "Silverchair", "Skid Row", "Slayer", 
-    "Sonic Youth", "Spandau Ballet", "Status Quo", "Stryper", "Sugar", "Tesla", "The Cult", 
-    "The Fabulous Thunderbirds", "The Guess Who", "The Lemonheads", "The Meat Puppets", "The Moody Blues", 
-    "The Outfield", "The Pogues", "The Scorpions", "The Stone Roses", "The Traveling Wilburys", 
-    "The Tubes", "The Zombies", "Third Eye Blind", "Toto", "Tygers of Pan Tang", "Ugly Kid Joe", 
-    "Van Der Graaf Generator", "W.A.S.P.", "War", "Ween", "White Lion", "Widespread Panic", "X", 
-    "Yardbirds", "Yngwie Malmsteen", "Zebra", "Ziggy Marley and the Melody Makers"
-]
-
+import pandas as pd
+import datetime 
+import musicbrainzngs as music
+import numpy as np
+from app_data import album_name_dict
 
 additional_bands = [
     "38 Special", "A Flock of Seagulls", "Accept", "Adrian Belew", "Aldo Nova", "Alphaville", "Ambrosia", 
@@ -91,3 +57,97 @@ additional_bands = [
     "Steeleye Span", "Steve Hackett", "Steve Hillage", "String Driven Thing", "T. Rex", 
     "Television", "The Band", "The Chambers Brothers", "The Dead Boys", "The Electric Flag"
 ]
+
+def create_cleaned_artist(artist_name):
+    try:
+        artist_high_level = music.get_artist_by_id(music.search_artists(artist= artist_name)['artist-list'][0]['id'])['artist']
+        first_albums = music.browse_release_groups(music.search_artists(artist=artist_name)['artist-list'][0]['id'], release_type=["album"])['release-group-list']
+        try:
+            start_band_date = music.search_artists(artist=artist_name)['artist-list'][0]['life-span']['begin']
+        except:
+            return None
+
+        name = artist_name
+        begin_date = pd.Timestamp(start_band_date).date()
+        area = artist_high_level['area']['name']
+        albums = []
+
+        album_name = []
+        release_date = []
+
+        for album in first_albums:
+            if len(album['first-release-date']) > 0:
+                album_name.append(album['title'])
+                release_date.append(album['first-release-date'])
+            
+        
+        date_name_frame = pd.DataFrame({'albums':album_name, 'date':release_date}).sort_values('date')
+        first_four_years = date_name_frame['date'].apply(lambda x: pd.Timestamp(x).date()).values[:4]
+
+        final_dict = {
+            'name':artist_name,
+            'form_date':begin_date,
+            'location':area,
+            'release_1':first_four_years[0],
+            'release_2':first_four_years[1],
+            'release_3':first_four_years[2],
+            'release_4':first_four_years[3]
+        }
+
+        return pd.DataFrame(final_dict,index=[0])
+    
+    except:
+        print(f'FAILED: {artist_name}')
+        return None
+
+def create_album_dict(artist_name):
+    try:
+        artist_high_level = music.get_artist_by_id(music.search_artists(artist= artist_name)['artist-list'][0]['id'])['artist']
+        first_albums = music.browse_release_groups(music.search_artists(artist=artist_name)['artist-list'][0]['id'], release_type=["album"])['release-group-list']
+        start_band_date = music.search_artists(artist=artist_name)['artist-list'][0]['life-span']['begin']
+
+        name = artist_name
+        begin_date = pd.Timestamp(start_band_date).date()
+        area = artist_high_level['area']['name']
+
+        album_name = []
+        release_date = []
+
+        for album in first_albums:
+            album_name.append(album['title'])
+            release_date.append(album['first-release-date'])
+
+        album_name = [i for i in album_name if artist_name not in i]
+        albums = {artist_name:album_name}
+
+        return albums
+    
+    except:
+        print(f'FAILED: {artist_name}')
+        return None
+
+def update_backend(n_updates=5):
+    try:
+        data = pd.read_csv('band_unit_test.csv')
+        current_bands = data['name'].unique()
+        bands_to_update = np.setdiff1d(additional_bands, current_bands)[:n_updates]
+
+        bands_cleaned = [create_cleaned_artist(artist_name=artist) for artist in bands_to_update]
+        bands_cleaned = [i for i in bands_cleaned if i is not None]
+        cleaned_data = pd.concat([create_cleaned_artist(artist_name=artist) for artist in bands_to_update])
+        update = pd.concat([data, cleaned_data])
+        update.to_csv('band_unit_test.csv')
+
+        albums_update = {}
+        for artist in current_bands:
+            albums_update.update(create_album_dict(artist_name=artist))
+        
+        album_name_dict.update(albums_update)
+        
+        with open("app_data.py", "a") as file:
+            file.write(f"\nmy_dict = {album_name_dict}")
+
+    except Exception as e:
+        print(f"BACKEND UPDATE FAILED: {e}")
+        
+        raise
