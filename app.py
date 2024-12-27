@@ -3,9 +3,7 @@ import random
 import pandas as pd
 import numpy as np
 import datetime
-from reset_day import rng_dict
-from album_dict import album_name_dict
-from country_dict import full_country_dict
+from app_data import full_country_dict, rng_dict, album_name_dict
 
 def highlight_closeness(guess_year, release_year):
     if guess_year is None:
