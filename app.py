@@ -6,8 +6,6 @@ import datetime
 import sys
 import ast
 
-sys.path.append("/Users/benstager/Desktop/rock riddle/backend/")
-
 def highlight_closeness(guess_year, release_year):
     if guess_year is None:
         return ""
@@ -47,12 +45,12 @@ def highlight_first_letter(guessed_band, band):
 def has_played_today():
     return None
 
-DATASET = pd.read_csv('/Users/benstager/Desktop/rock riddle/backend/BANDS.csv')
-rng_df = pd.read_csv('/Users/benstager/Desktop/rock riddle/backend/DAY_RESET.csv')
+DATASET = pd.read_csv('backend/BANDS.csv')
+rng_df = pd.read_csv('backend/DAY_RESET.csv')
 rng_dict = {str(i):j for i,j in zip(rng_df['date'].tolist(), rng_df['idx'].tolist())}
-album_df = pd.read_csv('/Users/benstager/Desktop/rock riddle/backend/ALBUMS.csv')
+album_df = pd.read_csv('backend/ALBUMS.csv')
 album_name_dict = {i:j for i,j in zip(album_df['artist'].tolist(), album_df['albums'].tolist())}
-country_df = pd.read_csv('/Users/benstager/Desktop/rock riddle/backend/COUNTRIES.csv')
+country_df = pd.read_csv('backend/COUNTRIES.csv')
 full_country_dict = {i:j for i,j in zip(country_df['country'].tolist(), country_df['continents'].tolist())}
 
 if "current_band" not in st.session_state:
@@ -79,7 +77,7 @@ st.write("✅ : album was released that year, or band was formed that year")
 st.write("⬆️ : your guess is lower than that release year, or band formed year")
 st.write("⬇️ : your guess is higher than that release year, or band formed year")
 st.write("🌎 : your guess is in the correct continent")
-st.wrtie("🔠: your guess starts with the same letter as the correct band")
+st.write("🔠: your guess starts with the same letter as the correct band")
 st.write("")
 
 if st.button("Click to view one of this band's albums. Clicking several times reveals more albums."):
